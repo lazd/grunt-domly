@@ -1,4 +1,4 @@
-# grunt-domly [![Build Status](https://travis-ci.org/lazd/grunt-domly.png?branch=master)](https://travis-ci.org/lazd/grunt-domly)
+# grunt-domly [![NPM version][npm-image]][npm-url] [![Build status][travis-image]][travis-url]
 > Precompile DOMly templates
 
 ## Usage
@@ -129,3 +129,7 @@ domly: {
 }
 ```
 
+[travis-url]: http://travis-ci.org/lazd/grunt-domly
+[travis-image]: https://secure.travis-ci.org/lazd/grunt-domly.png?branch=master
+[npm-url]: https://npmjs.org/package/grunt-domly
+[npm-image]: https://badge.fury.io/js/grunt-domly.png
