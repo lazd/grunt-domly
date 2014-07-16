@@ -3,10 +3,10 @@
 var path = require('path');
 var precompile = require('domly').precompile;
 var chalk = require('chalk');
+var nsdeclare = require('nsdeclare');
 
 module.exports = function(grunt) {
   var _ = grunt.util._;
-  var helpers = require('grunt-lib-contrib').init(grunt);
 
   grunt.registerMultiTask('domly', 'Precompile DOMly templates', function() {
 
@@ -15,49 +15,45 @@ module.exports = function(grunt) {
       separator: grunt.util.linefeed + grunt.util.linefeed,
       amd: false,
       commonjs: false,
-      processName: function(filepath) { return path.basename(filepath, '.html'); }
+      processName: function(filePath) { return path.basename(filePath, '.html'); }
     });
 
-    var nsInfo;
-    if (options.namespace !== false) {
-      nsInfo = helpers.getNamespaceDeclaration(options.namespace);
-    }
-
+    // Check if we're using namespaces
     var useNamespace = options.namespace !== false;
 
-    var namespaceInfo = _.memoize(function(filepath) {
-      if (!useNamespace) {return undefined;}
-      if (_.isFunction(options.namespace)) {
-        return helpers.getNamespaceDeclaration(options.namespace(filepath));
-      } else {
-        return helpers.getNamespaceDeclaration(options.namespace);
-      }
-    });
-
     var processName = options.processName;
-
-    var nsDeclarations = [];
 
     this.files.forEach(function(file) {
       var templates = [];
       var nsInfo;
       var templateName;
 
-      var contents = file.src.filter(function(filepath) {
-        if (!grunt.file.exists(filepath)) {
-          grunt.log.warn('Source file "' + filepath + '" not found.');
+      // Track which namespace parts have been declared
+      var declaredNamespaces = {};
+
+      var declareNamespaceAndStoreTemplate = function(filePath, templateName, value) {
+        if (!useNamespace) { return undefined; }
+
+        var templateWithDeclaration;
+        if (_.isFunction(options.namespace)) {
+          templateWithDeclaration = nsdeclare(options.namespace(filePath)+'.'+templateName, { declared: declaredNamespaces, value: value });
+        }
+        else {
+          templateWithDeclaration = nsdeclare(options.namespace+'.'+templateName, { declared: declaredNamespaces, value: value });
+        }
+
+        templates.push(templateWithDeclaration);
+      };
+
+      var contents = file.src.filter(function(filePath) {
+        if (!grunt.file.exists(filePath)) {
+          grunt.log.warn('Source file "' + filePath + '" not found.');
           return false;
         }
         return true;
-      }).map(function(filepath) {
+      }).map(function(filePath) {
         // Read file
-        var contents = grunt.file.read(filepath);
-
-        nsInfo = namespaceInfo(filepath);
-        if (nsInfo) {
-          // save a map of declarations so we can put them at the top of the file later
-          nsDeclarations.push(nsInfo.declaration);
-        }
+        var contents = grunt.file.read(filePath);
 
         // Compile
         var compiled;
@@ -66,16 +62,16 @@ module.exports = function(grunt) {
         }
         catch (e) {
           grunt.log.error(e);
-          grunt.fail.warn('DOMly failed to compile '+filepath+'.');
+          grunt.fail.warn('DOMly failed to compile '+filePath+'.');
         }
-     
-        templateName = processName(filepath);
+
+        templateName = processName(filePath);
 
         if(options.amd && !useNamespace) {
           compiled = 'return ' + compiled;
         }
         if (useNamespace) {
-          templates.push(nsInfo.namespace+'['+JSON.stringify(templateName)+'] = '+compiled+';');
+          declareNamespaceAndStoreTemplate(filePath, templateName, compiled);
         }
         else if (options.commonjs === true) {
           templates.push('templates['+JSON.stringify(templateName)+'] = '+compiled+';');
@@ -89,25 +85,20 @@ module.exports = function(grunt) {
         grunt.log.warn('Destination not written because compiled files were empty.');
       }
       else {
-        if (useNamespace) {
-          var declarations = nsDeclarations.join(options.separator);
-          templates.unshift(declarations);
-        }
-
         if (options.amd) {
           // Wrap the file in an AMD define fn.
           templates.unshift('define(function() {');
           if (useNamespace) {
             // Namespace has not been explicitly set to false; the AMD
             // wrapper will return the object containing the template.
-            templates.push('return '+nsInfo.namespace+';');
+            templates.push('return this['+JSON.stringify(options.namespace)+'];');
           }
           templates.push('});');
         }
 
         if (options.commonjs) {
           if (useNamespace) {
-            templates.push('return '+nsInfo.namespace+';');
+            templates.push('return templates['+JSON.stringify(options.namespace)+'];');
           }
           else {
             templates.unshift('var templates = {};');
