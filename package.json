@@ -1,6 +1,6 @@
 {
   "name": "grunt-domly",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Precompile DOMly templates",
   "main": "index.js",
   "scripts": {
@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/lazd/grunt-domly",
   "dependencies": {
-    "domly": "^0.0.5",
+    "domly": "^0.0.6",
     "chalk": "^0.5.1",
     "nsdeclare": "^0.0.0"
   },
