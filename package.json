@@ -1,6 +1,6 @@
 {
   "name": "grunt-domly",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Precompile DOMly templates",
   "main": "index.js",
   "scripts": {
@@ -14,7 +14,8 @@
     "domly",
     "compile",
     "precompile",
-    "template"
+    "template",
+    "gruntplugin"
   ],
   "author": "Larry Davis <lazdnet@gmail.com>",
   "license": "MIT",
@@ -26,15 +27,15 @@
   },
   "homepage": "https://github.com/lazd/grunt-domly",
   "dependencies": {
-    "domly": "^0.0.6",
-    "chalk": "^0.5.1",
-    "nsdeclare": "^0.0.0"
+    "domly": "^0.0.8",
+    "chalk": "^1.0.0",
+    "nsdeclare": "^0.1.0"
   },
   "devDependencies": {
-    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-jshint": "^0.11.0",
     "grunt-contrib-nodeunit": "^0.4.1",
-    "grunt-contrib-clean": "^0.5.0",
-    "grunt-contrib-internal": "^0.4.10"
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-internal": "^0.4.12"
   },
   "peerDependencies": {
     "grunt": "^0.4.5"
