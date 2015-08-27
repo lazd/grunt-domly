@@ -10,8 +10,8 @@ function filesAreEqual(actual, expected, fn) {
     expected = actual;
   }
   fn(
-    String(grunt.file.read(path.join('tmp', actual))).replace(/\s/g, ''),
-    String(grunt.file.read(path.join('test', 'expected', expected))).replace(/\s/g, '')
+    String(grunt.file.read(path.join('tmp', actual))).replace(/\/\*\*\//g, '').replace(/\n/g, ''),
+    String(grunt.file.read(path.join('test', 'expected', expected))).replace(/\n/g, '')
   );
 }
 
