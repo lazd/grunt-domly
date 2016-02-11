@@ -36,10 +36,10 @@ module.exports = function(grunt) {
 
         var templateWithDeclaration;
         if (_.isFunction(options.namespace)) {
-          templateWithDeclaration = nsdeclare(options.namespace(filePath)+'.'+templateName, { declared: declaredNamespaces, value: value });
+          templateWithDeclaration = nsdeclare(options.namespace(filePath)+'.'+templateName, { declared: declaredNamespaces, value: value, root: options.root });
         }
         else {
-          templateWithDeclaration = nsdeclare(options.namespace+'.'+templateName, { declared: declaredNamespaces, value: value });
+          templateWithDeclaration = nsdeclare(options.namespace+'.'+templateName, { declared: declaredNamespaces, value: value, root: options.root });
         }
 
         templates.push(templateWithDeclaration);
