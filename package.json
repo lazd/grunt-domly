@@ -1,6 +1,6 @@
 {
   "name": "grunt-domly",
-  "version": "0.0.7",
+  "version": "0.1.0",
   "description": "Precompile DOMly templates",
   "main": "index.js",
   "scripts": {
