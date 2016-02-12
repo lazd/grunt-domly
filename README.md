@@ -56,6 +56,12 @@ options: {
 }
 ```
 
+#### root
+Type: `String`  
+Default: `'this'`
+
+The name of the object in which template namespaces will be declared. By default, `nsdeclare` will declare namespaces within the `this` object (which defaults to `window` in browser environments), but you can change it here if necessary.
+
 #### amd
 Type: `Boolean`  
 Default: `false`
