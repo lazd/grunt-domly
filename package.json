@@ -23,7 +23,7 @@
     "url": "https://github.com/lazd/grunt-domly/issues"
   },
   "engines": {
-    "node" : ">=0.10"
+    "node": ">=0.10"
   },
   "homepage": "https://github.com/lazd/grunt-domly",
   "dependencies": {
@@ -38,6 +38,6 @@
     "grunt-contrib-internal": "^0.4.12"
   },
   "peerDependencies": {
-    "grunt": "^0.4.5"
+    "grunt": ">=0.4.0"
   }
 }
